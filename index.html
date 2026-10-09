@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Guided Treasure Hunt</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        #clue-display {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            min-height: 60px; /* Ensure space even if clue is short */
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        #message.success {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Technology-Assisted Treasure Hunt</h1>
+        <p>Use your device to get clues and verify your findings in the real world!</p>
+
+        <div id="clue-display"></div>
+        <input type="text" id="answer-input" placeholder="Enter your answer here">
+        <button id="submit-button">Submit Answer</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // This array defines the stages of the treasure hunt.
+        // Each stage provides a 'clue' to guide the user to a physical location
+        // and an 'answer' (a keyword or observation) expected from that location.
+        const treasureHuntStages = [
+            {
+                clue: "Your adventure begins! Find the oldest tree in the park. What is carved into its bark? (Hint: A virtue)",
+                answer: "wisdom" // The expected answer from the physical location
+            },
+            {
+                clue: "Excellent! Now, head to the park's main fountain. How many spouts does it have? (Hint: A number)",
+                answer: "four" // The expected answer
+            },
+            {
+                clue: "Almost there! Seek out the bench dedicated to 'Community Heroes'. What year is inscribed on it? (Hint: A four-digit year)",
+                answer: "2005" // The expected answer
+            },
+            {
+                clue: "Congratulations! You've found the final clue. Your treasure is hidden near the park's entrance sign. The final keyword is 'EXPLORE'.",
+                answer: "explore" // The final answer to complete the hunt
+            }
+        ];
+
+        let currentStageIndex = 0;
+
+        const clueDisplay = document.getElementById('clue-display');
+        const answerInput = document.getElementById('answer-input');
+        const submitButton = document.getElementById('submit-button');
+        const messageDisplay = document.getElementById('message');
+
+        // Function to display the current clue to the user.
+        // This simulates the smartphone providing guidance for a real-world task.
+        function displayClue() {
+            if (currentStageIndex < treasureHuntStages.length) {
+                clueDisplay.textContent = treasureHuntStages[currentStageIndex].clue;
+                answerInput.value = ''; // Clear previous answer
+                messageDisplay.textContent = ''; // Clear previous message
+                submitButton.disabled = false;
+                answerInput.disabled = false;
+                answerInput.style.display = 'block';
+                submitButton.style.display = 'block';
+            } else {
+                // Game over state: all clues completed.
+                clueDisplay.textContent = "You've completed the treasure hunt! Well done!";
+                answerInput.style.display = 'none';
+                submitButton.style.display = 'none';
+                messageDisplay.className = 'success';
+                messageDisplay.textContent = "Game Over! You've successfully used technology to explore the real world.";
+            }
+        }
+
+        // Function to check the user's input against the correct answer for the current stage.
+        // This simulates the device validating a real-world finding.
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = treasureHuntStages[currentStageIndex].answer.toLowerCase();
+
+            if (userAnswer === correctAnswer) {
+                messageDisplay.className = 'success';
+                messageDisplay.textContent = "Correct! Proceed to the next location.";
+                currentStageIndex++; // Advance to the next stage
+                setTimeout(displayClue, 1500); // Display next clue after a short delay
+            } else {
+                messageDisplay.className = ''; // Remove success class if present
+                messageDisplay.textContent = "Incorrect answer. Try again or re-evaluate your surroundings!";
+            }
+        }
+
+        // Event listener for the submit button
+        submitButton.addEventListener('click', checkAnswer);
+
+        // Allow pressing Enter key to submit the answer
+        answerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize the game by displaying the first clue
+        displayClue();
+    </script>
+</body>
+</html>
